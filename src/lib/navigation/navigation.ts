@@ -55,29 +55,6 @@ const NAV_STRUCTURE: NavStructureItem[] = [
 			ROUTES.ADMIN.STORAGE,
 		],
 	},
-	{
-		section: "Billing & Finance",
-		routes: [
-			ROUTES.ADMIN.FINANCE_PAYMENTS,
-			ROUTES.ADMIN.FINANCE_INVOICES,
-			ROUTES.ADMIN.FINANCE_REPORTS,
-		],
-	},
-	{
-		section: "E-Commerce",
-		routes: [
-			ROUTES.ADMIN.PRODUCTS,
-			ROUTES.ADMIN.ORDERS,
-			ROUTES.ADMIN.INVENTORY,
-			ROUTES.ADMIN.CUSTOMERS,
-			ROUTES.ADMIN.COUPONS,
-			ROUTES.ADMIN.BRANDS,
-			ROUTES.ADMIN.CATEGORIES,
-			ROUTES.ADMIN.REVIEWS,
-			ROUTES.ADMIN.SHIPPING,
-			ROUTES.ADMIN.CAMPAIGNS,
-		],
-	},
 ];
 
 function routeToNavItem(route: string): NavItem | null {

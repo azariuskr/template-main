@@ -27,9 +27,7 @@ export const ROUTES = {
         SECURITY: "/account/security",
         SESSION: "/account/session",
         ORGANIZATIONS: "/account/organizations",
-
         SESSIONS: "/account/sessions",
-
         APPEARANCE: "/account/appearance",
         NOTIFICATIONS: "/account/notifications",
     },
@@ -52,45 +50,6 @@ export const ROUTES = {
             ROLES: "/admin/rbac/roles",
             ROUTES: "/admin/rbac/routes",
             PERMISSIONS: "/admin/rbac/permissions",
-        },
-        // Billing & Finance (e-commerce)
-        FINANCE: "/admin/finance",
-        FINANCE_PAYMENTS: "/admin/finance/payments",
-        FINANCE_INVOICES: "/admin/finance/invoices",
-        FINANCE_REPORTS: "/admin/finance/reports",
-        // E-commerce
-        PRODUCTS: "/admin/products",
-        PRODUCT_NEW: "/admin/products/new",
-        PRODUCT_DETAIL: (id: string) => `/admin/products/${id}` as const,
-        ORDERS: "/admin/orders",
-        ORDER_DETAIL: (id: string) => `/admin/orders/${id}` as const,
-        INVENTORY: "/admin/inventory",
-        CUSTOMERS: "/admin/customers",
-        COUPONS: "/admin/coupons",
-        BRANDS: "/admin/brands",
-        CATEGORIES: "/admin/categories",
-        REVIEWS: "/admin/reviews",
-        SHIPPING: "/admin/shipping",
-        COLLECTIONS: "/admin/collections",
-        CAMPAIGNS: "/admin/campaigns",
-        CAMPAIGN_DETAIL: (id: string) => `/admin/campaigns/${id}` as const,
-        CAMPAIGN_NEW: "/admin/campaigns/new",
-    },
-
-    // Storefront
-    STORE: {
-        BASE: "/store",
-        PRODUCTS: "/store/products",
-        CART: "/store/cart",
-        WISHLIST: "/store/wishlist",
-        ABOUT: "/store/about",
-        FAQ: "/store/faq",
-        CONTACT: "/store/contact",
-        ACCOUNT: {
-            BASE: "/store/account",
-            ORDERS: "/store/account/orders",
-            ORDER_DETAIL: (id: string) => `/store/account/orders/${id}` as const,
-            ADDRESSES: "/store/account/addresses",
         },
     },
 
@@ -224,10 +183,8 @@ export const QUERY_KEYS = {
         CREDITS: ["billing", "credits"],
         CREDIT_PACKAGES: ["billing", "credit-packages"],
         PAYMENT_METHODS: ["billing", "payment-methods"],
-        // User payment/subscription history
         PAYMENT_HISTORY: ["billing", "payment-history"],
         SUBSCRIPTION_HISTORY: ["billing", "subscription-history"],
-        // Admin keys
         STATS: ["billing", "stats"],
         SUBSCRIPTIONS_LIST: ["billing", "subscriptions", "list"],
         SUBSCRIPTIONS_PAGINATED: (params?: Record<string, unknown>) => [
@@ -256,104 +213,9 @@ export const QUERY_KEYS = {
         INVOICES_LIST: ["billing", "invoices", "list"],
         REVENUE_METRICS: ["billing", "revenue", "metrics"],
         WEBHOOK_EVENTS: ["billing", "webhook-events"],
-        // Admin: User-specific
         USER_PAYMENT_HISTORY: (userId: string) => ["billing", "user-payment-history", userId],
     },
     ROUTE_ACCESS: (route: string) => ["route-access", route],
-
-    // E-commerce
-    PRODUCTS: {
-        LIST: ["products", "list"],
-        PAGINATED: (params?: Record<string, unknown>) => ["products", "paginated", params],
-        PAGINATED_BASE: ["products", "paginated"],
-        DETAIL: (id: string) => ["products", "detail", id],
-        BY_SLUG: (slug: string) => ["products", "slug", slug],
-        FACETS: ["products", "facets"],
-    },
-    VARIANTS: {
-        LIST: (productId: string) => ["variants", "list", productId],
-        DETAIL: (id: string) => ["variants", "detail", id],
-    },
-    CATEGORIES: {
-        LIST: ["categories", "list"],
-        TREE: ["categories", "tree"],
-        PAGINATED: (params?: Record<string, unknown>) => ["categories", "paginated", params],
-        PAGINATED_BASE: ["categories", "paginated"],
-        DETAIL: (id: string) => ["categories", "detail", id],
-    },
-    BRANDS: {
-        LIST: ["brands", "list"],
-        PAGINATED: (params?: Record<string, unknown>) => ["brands", "paginated", params],
-        PAGINATED_BASE: ["brands", "paginated"],
-        DETAIL: (id: string) => ["brands", "detail", id],
-    },
-    ORDERS: {
-        LIST: ["orders", "list"],
-        PAGINATED: (params?: Record<string, unknown>) => ["orders", "paginated", params],
-        PAGINATED_BASE: ["orders", "paginated"],
-        DETAIL: (id: string) => ["orders", "detail", id],
-        BY_NUMBER: (orderNumber: string) => ["orders", "number", orderNumber],
-        FACETS: ["orders", "facets"],
-        STATS: ["orders", "stats"],
-    },
-    CART: {
-        CURRENT: ["cart", "current"],
-        ITEMS: ["cart", "items"],
-    },
-    INVENTORY: {
-        LIST: ["inventory", "list"],
-        PAGINATED: (params?: Record<string, unknown>) => ["inventory", "paginated", params],
-        PAGINATED_BASE: ["inventory", "paginated"],
-        LOW_STOCK: ["inventory", "low-stock"],
-    },
-    CUSTOMERS: {
-        LIST: ["customers", "list"],
-        PAGINATED: (params?: Record<string, unknown>) => ["customers", "paginated", params],
-        PAGINATED_BASE: ["customers", "paginated"],
-        DETAIL: (id: string) => ["customers", "detail", id],
-    },
-    COUPONS: {
-        LIST: ["coupons", "list"],
-        PAGINATED: (params?: Record<string, unknown>) => ["coupons", "paginated", params],
-        PAGINATED_BASE: ["coupons", "paginated"],
-        DETAIL: (id: string) => ["coupons", "detail", id],
-        VALIDATE: (code: string) => ["coupons", "validate", code],
-    },
-    REVIEWS: {
-        LIST: ["reviews", "list"],
-        PAGINATED: (params?: Record<string, unknown>) => ["reviews", "paginated", params],
-        PAGINATED_BASE: ["reviews", "paginated"],
-        BY_PRODUCT: (productId: string) => ["reviews", "product", productId],
-        PENDING: ["reviews", "pending"],
-    },
-    COLLECTIONS: {
-        LIST: ["collections", "list"],
-        DETAIL: (id: string) => ["collections", "detail", id],
-        BY_SLUG: (slug: string) => ["collections", "slug", slug],
-    },
-    MY_ORDERS: {
-        LIST: ["my-orders", "list"],
-        PAGINATED: (params?: Record<string, unknown>) => ["my-orders", "paginated", params],
-        DETAIL: (id: string) => ["my-orders", "detail", id],
-    },
-    WISHLIST: {
-        ITEMS: ["wishlist", "items"],
-    },
-    ADDRESSES: {
-        LIST: ["addresses", "list"],
-        DETAIL: (id: string) => ["addresses", "detail", id],
-    },
-    COLORS: {
-        LIST: ["colors", "list"],
-    },
-    SIZES: {
-        LIST: ["sizes", "list"],
-    },
-    CAMPAIGNS: {
-        PAGINATED: (filters: Record<string, unknown>) => ["campaigns", "paginated", filters],
-        PAGINATED_BASE: ["campaigns", "paginated"],
-        DETAIL: (id: string) => ["campaigns", "detail", id],
-    },
     EMAIL_TEMPLATES: {
         LIST: ["email-templates", "list"],
         DETAIL: (id: string) => ["email-templates", "detail", id],
@@ -385,92 +247,13 @@ export const MUTATION_KEYS = {
         USE_CREDITS: ["billing", "use-credits"],
         GRANT_CREDITS: ["billing", "grant-credits"],
         GET_PORTAL_URL: ["billing", "portal-url"],
-        // Subscription change
         PREVIEW_PRORATION: ["billing", "preview-proration"],
         CHANGE_SUBSCRIPTION: ["billing", "change-subscription"],
-        // Payment methods
         CREATE_SETUP_INTENT: ["billing", "create-setup-intent"],
         SET_DEFAULT_PAYMENT_METHOD: ["billing", "set-default-payment-method"],
         DELETE_PAYMENT_METHOD: ["billing", "delete-payment-method"],
-        // Admin
         CREATE_CUSTOMER: ["billing", "create-customer"],
         ADMIN_CHANGE_SUBSCRIPTION: ["billing", "admin-change-subscription"],
-    },
-
-    // E-commerce
-    PRODUCT: {
-        CREATE: ["product", "create"],
-        UPDATE: ["product", "update"],
-        DELETE: ["product", "delete"],
-        PUBLISH: ["product", "publish"],
-        ARCHIVE: ["product", "archive"],
-    },
-    VARIANT: {
-        CREATE: ["variant", "create"],
-        UPDATE: ["variant", "update"],
-        DELETE: ["variant", "delete"],
-    },
-    INVENTORY: {
-        ADJUST: ["inventory", "adjust"],
-        BULK_UPDATE: ["inventory", "bulk-update"],
-    },
-    ORDER: {
-        UPDATE_STATUS: ["order", "update-status"],
-        ADD_SHIPMENT: ["order", "add-shipment"],
-        CANCEL: ["order", "cancel"],
-        REFUND: ["order", "refund"],
-        ADD_NOTE: ["order", "add-note"],
-    },
-    CART: {
-        ADD_ITEM: ["cart", "add-item"],
-        UPDATE_ITEM: ["cart", "update-item"],
-        REMOVE_ITEM: ["cart", "remove-item"],
-        APPLY_COUPON: ["cart", "apply-coupon"],
-        REMOVE_COUPON: ["cart", "remove-coupon"],
-        CLEAR: ["cart", "clear"],
-        MERGE: ["cart", "merge"],
-    },
-    CHECKOUT: {
-        CREATE: ["checkout", "create"],
-        VERIFY_PAYMENT: ["checkout", "verify-payment"],
-    },
-    COUPON: {
-        CREATE: ["coupon", "create"],
-        UPDATE: ["coupon", "update"],
-        DELETE: ["coupon", "delete"],
-    },
-    REVIEW: {
-        CREATE: ["review", "create"],
-        UPDATE: ["review", "update"],
-        DELETE: ["review", "delete"],
-        APPROVE: ["review", "approve"],
-    },
-    WISHLIST: {
-        ADD: ["wishlist", "add"],
-        REMOVE: ["wishlist", "remove"],
-    },
-    ADDRESS: {
-        CREATE: ["address", "create"],
-        UPDATE: ["address", "update"],
-        DELETE: ["address", "delete"],
-        SET_DEFAULT: ["address", "set-default"],
-    },
-    CATEGORY: {
-        CREATE: ["category", "create"],
-        UPDATE: ["category", "update"],
-        DELETE: ["category", "delete"],
-    },
-    BRAND: {
-        CREATE: ["brand", "create"],
-        UPDATE: ["brand", "update"],
-        DELETE: ["brand", "delete"],
-    },
-    COLLECTION: {
-        CREATE: ["collection", "create"],
-        UPDATE: ["collection", "update"],
-        DELETE: ["collection", "delete"],
-        ADD_PRODUCT: ["collection", "add-product"],
-        REMOVE_PRODUCT: ["collection", "remove-product"],
     },
 } as const;
 
@@ -500,48 +283,6 @@ export const MESSAGES = {
         PAYMENT_METHOD_ADDED: "Payment method added successfully",
         PAYMENT_METHOD_REMOVED: "Payment method removed successfully",
         DEFAULT_PAYMENT_METHOD_SET: "Default payment method updated",
-        // E-commerce messages
-        PRODUCT_CREATED: "Product created successfully",
-        PRODUCT_UPDATED: "Product updated successfully",
-        PRODUCT_DELETED: "Product deleted successfully",
-        PRODUCT_PUBLISHED: "Product published successfully",
-        VARIANT_CREATED: "Variant created successfully",
-        VARIANT_UPDATED: "Variant updated successfully",
-        VARIANT_DELETED: "Variant deleted successfully",
-        ORDER_UPDATED: "Order updated successfully",
-        ORDER_SHIPPED: "Order marked as shipped",
-        ORDER_CANCELLED: "Order cancelled successfully",
-        ORDER_REFUNDED: "Order refunded successfully",
-        CART_ITEM_ADDED: "Item added to cart",
-        CART_ITEM_UPDATED: "Cart updated",
-        CART_ITEM_REMOVED: "Item removed from cart",
-        COUPON_APPLIED: "Coupon applied successfully",
-        COUPON_REMOVED: "Coupon removed",
-        COUPON_CREATED: "Coupon created successfully",
-        COUPON_UPDATED: "Coupon updated successfully",
-        COUPON_DELETED: "Coupon deleted successfully",
-        BRAND_CREATED: "Brand created successfully",
-        BRAND_UPDATED: "Brand updated successfully",
-        BRAND_DELETED: "Brand deleted successfully",
-        CATEGORY_CREATED: "Category created successfully",
-        CATEGORY_UPDATED: "Category updated successfully",
-        CATEGORY_DELETED: "Category deleted successfully",
-        REVIEW_SUBMITTED: "Review submitted successfully",
-        REVIEW_APPROVED: "Review approved",
-        REVIEW_DELETED: "Review deleted",
-        WISHLIST_ADDED: "Added to wishlist",
-        WISHLIST_REMOVED: "Removed from wishlist",
-        ADDRESS_SAVED: "Address saved successfully",
-        ADDRESS_DELETED: "Address deleted",
-        STOCK_ADJUSTED: "Stock adjusted successfully",
-        TEMPLATE_CREATED: "Email template created",
-        TEMPLATE_UPDATED: "Email template updated",
-        TEMPLATE_DELETED: "Email template deleted",
-        CAMPAIGN_CREATED: "Campaign created",
-        CAMPAIGN_UPDATED: "Campaign updated",
-        CAMPAIGN_DELETED: "Campaign deleted",
-        CAMPAIGN_SCHEDULED: "Campaign scheduled",
-        CAMPAIGN_STARTED: "Campaign started",
     },
 
     ERROR: {
@@ -566,19 +307,6 @@ export const MESSAGES = {
         PORTAL_FAILED: "Failed to open billing portal",
         PAYMENT_METHOD_REQUIRED: "Please add a payment method to continue",
         PAYMENT_METHOD_FAILED: "Failed to update payment method",
-        // E-commerce errors
-        PRODUCT_NOT_FOUND: "Product not found",
-        VARIANT_NOT_FOUND: "Variant not found",
-        ORDER_NOT_FOUND: "Order not found",
-        CART_EMPTY: "Your cart is empty",
-        INSUFFICIENT_STOCK: "Insufficient stock available",
-        INVALID_COUPON: "Invalid or expired coupon code",
-        COUPON_MIN_ORDER: "Order does not meet minimum amount for this coupon",
-        COUPON_EXPIRED: "This coupon has expired",
-        COUPON_USAGE_LIMIT: "This coupon has reached its usage limit",
-        CHECKOUT_FAILED_STOCK: "Some items are no longer available in the requested quantity",
-        REVIEW_ALREADY_EXISTS: "You have already reviewed this product",
-        ADDRESS_NOT_FOUND: "Address not found",
     },
 
     CONFIRM: {
@@ -730,102 +458,3 @@ export const AVATAR_CONFIG = {
         "image/gif",
     ] as const,
 } as const;
-
-// ============================================================================
-// E-Commerce Configuration
-// ============================================================================
-
-export const ORDER_STATUSES = [
-    "pending",
-    "confirmed",
-    "processing",
-    "shipped",
-    "delivered",
-    "cancelled",
-    "refunded",
-] as const;
-
-export type OrderStatus = (typeof ORDER_STATUSES)[number];
-
-export const ORDER_STATUS_LABELS: Record<OrderStatus, string> = {
-    pending: "Pending",
-    confirmed: "Confirmed",
-    processing: "Processing",
-    shipped: "Shipped",
-    delivered: "Delivered",
-    cancelled: "Cancelled",
-    refunded: "Refunded",
-} as const;
-
-export const PRODUCT_STATUSES = ["draft", "active", "archived"] as const;
-
-export type ProductStatus = (typeof PRODUCT_STATUSES)[number];
-
-export const PRODUCT_STATUS_LABELS: Record<ProductStatus, string> = {
-    draft: "Draft",
-    active: "Active",
-    archived: "Archived",
-} as const;
-
-export const PAYMENT_STATUSES = ["pending", "completed", "failed", "refunded"] as const;
-
-export type PaymentStatus = (typeof PAYMENT_STATUSES)[number];
-
-export const PAYMENT_STATUS_LABELS: Record<PaymentStatus, string> = {
-    pending: "Pending",
-    completed: "Completed",
-    failed: "Failed",
-    refunded: "Refunded",
-} as const;
-
-export const DISCOUNT_TYPES = ["percentage", "fixed_amount"] as const;
-
-export type DiscountType = (typeof DISCOUNT_TYPES)[number];
-
-export const SIZE_CATEGORIES = ["clothing", "shoes", "accessories", "one_size"] as const;
-
-export type SizeCategory = (typeof SIZE_CATEGORIES)[number];
-
-export const SIZE_CATEGORY_LABELS: Record<SizeCategory, string> = {
-    clothing: "Clothing",
-    shoes: "Shoes",
-    accessories: "Accessories",
-    one_size: "One Size",
-} as const;
-
-// Currency formatting (USD only for now)
-export const CURRENCY = {
-    CODE: "USD",
-    SYMBOL: "$",
-    DECIMAL_PLACES: 2,
-} as const;
-
-// Format cents to display string
-export const formatPrice = (cents: number): string => {
-    return `${CURRENCY.SYMBOL}${(cents / 100).toFixed(CURRENCY.DECIMAL_PLACES)}`;
-};
-
-// Parse display string to cents
-export const parsePriceToCents = (price: string | number): number => {
-    if (typeof price === "number") return Math.round(price * 100);
-    const cleaned = price.replace(/[^0-9.]/g, "");
-    return Math.round(parseFloat(cleaned) * 100);
-};
-
-// Cart configuration
-export const CART_CONFIG = {
-    GUEST_CART_EXPIRY_DAYS: 7,
-    ABANDONED_CART_HOURS: 2,
-    MAX_QUANTITY_PER_ITEM: 99,
-} as const;
-
-// Inventory configuration
-export const INVENTORY_CONFIG = {
-    DEFAULT_LOW_STOCK_THRESHOLD: 10,
-    RESERVATION_EXPIRY_MINUTES: 10,
-} as const;
-
-// Shipping carriers
-export const SHIPPING_CARRIERS = ["USPS", "UPS", "FedEx", "DHL", "Other"] as const;
-
-export type ShippingCarrier = (typeof SHIPPING_CARRIERS)[number];

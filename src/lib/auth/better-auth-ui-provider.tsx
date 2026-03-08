@@ -7,7 +7,6 @@ import { ROUTES, QUERY_KEYS, AUTH_ROUTE_VIEWS } from "@/constants";
 import { useIsMobile } from "@/hooks/use-mobile";
 import authClient from "@/lib/auth/auth-client";
 import { authQueryOptions } from "@/lib/auth/queries";
-import { $mergeGuestCart } from "@/lib/ecommerce/functions";
 import { uploadAvatar, deleteAvatar } from "@/lib/storage/avatar";
 import { env } from "@/env/client";
 import { stripBasePath } from "@/lib/url/with-base-path";
@@ -69,14 +68,6 @@ export function BetterAuthUiProviders({ children }: { children: React.ReactNode 
             queryClient.removeQueries({ queryKey: authQueryOptions().queryKey }),
             queryClient.invalidateQueries({ queryKey: authQueryOptions().queryKey }),
           ]);
-          // Merge guest cart on login (best-effort, non-blocking)
-          $mergeGuestCart()
-            .then((result) => {
-              if (result.ok && result.data.merged) {
-                queryClient.invalidateQueries({ queryKey: QUERY_KEYS.CART.CURRENT });
-              }
-            })
-            .catch(() => {});
           await router.invalidate();
         }}
         avatar={{
