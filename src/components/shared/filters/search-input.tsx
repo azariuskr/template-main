@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useDebouncedCallback } from "use-debounce";
+import { useDebouncedCallback } from "@tanstack/react-pacer";
 import { Input } from "@/components/ui/input";
 import { Search, X } from "lucide-react";
 
@@ -22,7 +22,7 @@ export function SearchInput({
 
     const debouncedOnChange = useDebouncedCallback((v: string) => {
         onChange(v || undefined);
-    }, debounceMs);
+    }, { wait: debounceMs });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = e.target.value;
