@@ -6,11 +6,9 @@ import {
   Users,
   ArrowRight,
   Coins,
-  Receipt,
 } from "lucide-react";
 import { PageContainer } from "@/components/admin/app-layout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useBillingConfig, usePlans, useBillingStats } from "@/hooks/use-billing";
 import { useHasPermission } from "@/hooks/auth-hooks";

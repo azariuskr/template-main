@@ -1,5 +1,7 @@
 # Storefront Design & Implementation Plan
 
+Last Updated: 2026-02-21
+
 ## Design Vision
 
 **Mix two inspiration sources into a unified storefront:**
@@ -41,8 +43,8 @@
 ### Approach: Dual Layout System
 ```
 src/routes/
-  (authenticated)/admin/...   → AdminLayout (existing Shadcn theme)
-  (storefront)/...            → StorefrontLayout (PartyPop theme)
+  (authenticated)/admin/...   -> AdminLayout (existing Shadcn theme)
+  (storefront)/...            -> StorefrontLayout (PartyPop theme)
 ```
 
 ### StorefrontLayout provides:
@@ -53,130 +55,39 @@ src/routes/
 - Font imports (Varela Round, Quicksand)
 - Storefront-specific CSS variables / Tailwind theme extension
 
-### Theme config:
-- Extend `tailwind.config` with storefront colors under a custom prefix or CSS variables
-- Storefront components use storefront-specific utility classes
-- Admin components continue using existing Shadcn theme
-
 ---
 
-## Pages to Build (Priority Order)
+## Pages — Implementation Status
 
-### Phase 1: Core Shopping Flow
-1. **Landing/Home** (`/store` or `/`)
-   - Hero section with gradient overlay + CTA
-   - Category cards (4-column grid)
-   - Featured products grid with quick-view
-   - Newsletter signup section
-   - Source: Landing-Page.html (LittleSprout) + e-commerce-ui hero layout
+### Phase 1: Core Shopping Flow — COMPLETE
+1. **Landing/Home** (`/store`) — DONE + CMS integration
+2. **Product Catalog** (`/store/products`) — DONE
+3. **Product Detail** (`/store/products/:slug`) — DONE
+4. **Cart** (`/store/cart`) — DONE
+5. **Checkout** (`/store/checkout`) — DONE
+6. **Search** (`/store/search`) — DONE
+7. **Wishlist** (`/store/wishlist`) — DONE
 
-2. **Product Catalog** (`/store/products`)
-   - Breadcrumb navigation
-   - Sidebar filters (categories, price range, colors, sizes)
-   - Product grid (3-col desktop, 2-col tablet, 1-col mobile)
-   - Sort dropdown, filter tags
-   - Pagination or "Load more"
-   - Source: Product-Library-Catalog-Page.html
+### Phase 2: Supporting Pages — COMPLETE
+8. **About Us** (`/store/about`) — DONE
+9. **FAQ / Shipping & Returns** (`/store/faq`) — DONE
+10. **Contact** (`/store/contact`) — DONE
 
-3. **Product Detail** (`/store/products/:slug`)
-   - Image gallery with thumbnails
-   - Product info (name, price, description, badges)
-   - Variant selectors (color swatches, size buttons)
-   - Quantity selector + Add to Cart button
-   - Trust badges (shipping, guarantee)
-   - "You may also like" section
-   - Source: Product-Page.html
+### Phase 3: Account Pages — COMPLETE
+11. **Account Overview** (`/store/account`) — DONE
+12. **Account Orders** (`/store/account/orders`) — DONE
+13. **Account Addresses** (`/store/account/addresses`) — DONE
 
-4. **Cart** (`/store/cart`)
-   - Free shipping progress bar
-   - Cart items with images, quantity adjusters, remove buttons
-   - Order summary sidebar (subtotal, tax, shipping, total)
-   - Promo code input
-   - Upsell section ("Don't forget these")
-   - Source: Cart-page.html
+### Phase 4: CMS Integration — IN PROGRESS
+All storefront pages need CMS integration so hardcoded text can be
+managed from the admin CMS panel. Pattern:
+```tsx
+const { data: cmsData } = useQuery(cmsResolvedSectionQueryOptions("section.key", locale));
+const title = pickString(cmsData?.ok ? cmsData.data?.translation?.title : undefined, "Fallback");
+```
 
-5. **Checkout** (`/store/checkout`)
-   - Multi-step or single-page checkout
-   - Contact info form
-   - Shipping address form
-   - Shipping method selector
-   - Payment section (Stripe integration)
-   - Order summary sidebar
-   - Source: checkout-page.html
-
-6. **Order Confirmation** (`/store/orders/:orderNumber/confirmation`)
-   - Success icon/animation
-   - Order number badge
-   - Items ordered list
-   - Shipping + payment summary
-   - "Return to Shop" CTA
-   - Source: Order-Confirmation-page.html
-
-### Phase 2: Supporting Pages
-7. **Search Results** (`/store/search`)
-   - Search query display + result count
-   - Quick filter tags
-   - Same product grid as catalog
-   - Source: Search-result-Page.html
-
-8. **About Us** (`/store/about`)
-   - Brand story section
-   - Stats display
-   - Values cards
-   - Source: About-Us-Brand-Story-page.html
-
-9. **FAQ / Shipping & Returns** (`/store/faq`)
-   - Shipping info cards
-   - Returns policy
-   - Accordion FAQ
-   - Source: FAQ-Shipping-&-Returns-sections.html
-
-10. **Contact** (`/store/contact`)
-    - Contact method cards
-    - Contact form
-    - Source: Contact-Form-&-Support-Details.html
-
----
-
-## Implementation Steps
-
-### Step 1: Storefront Layout & Theme Setup
-- [ ] Create storefront route group: `src/routes/(storefront)/`
-- [ ] Create `StorefrontLayout` component with nav, footer, cart drawer
-- [ ] Add Google Fonts (Varela Round, Quicksand) to storefront head
-- [ ] Extend Tailwind config with storefront color palette
-- [ ] Create storefront-specific UI primitives (StorefrontButton, StorefrontCard, etc.) or use Tailwind utility classes directly
-- [ ] Ensure admin layout is completely unaffected
-
-### Step 2: Shared Storefront Components
-- [ ] `StorefrontNav` - sticky nav with logo, search, cart badge, user menu
-- [ ] `StorefrontFooter` - minimal footer
-- [ ] `CartDrawer` - slide-in cart sidebar (uses existing cart server functions)
-- [ ] `ProductCard` - product grid card with hover quick-view
-- [ ] `ProductBadge` - Hot/New/Sale badges
-- [ ] `PriceDisplay` (storefront version with storefront styling)
-- [ ] `FilterSidebar` - category, price range, color, size filters
-- [ ] `QuantitySelector` - +/- quantity input
-- [ ] `ToastProvider` - storefront toast notifications
-
-### Step 3: Landing Page
-- [ ] Hero section (gradient overlay, CTA button)
-- [ ] Category grid section
-- [ ] Featured products section (uses `$getProducts` server function)
-- [ ] Newsletter signup section
-
-### Step 4: Catalog & Product Detail
-- [ ] Product catalog page with filters + grid
-- [ ] Product detail page with gallery + variants + add-to-cart
-- [ ] Wire up to existing server functions ($getProducts, $getProduct)
-
-### Step 5: Cart & Checkout
-- [ ] Cart page (uses existing $getCart, $updateCartItem, $removeFromCart)
-- [ ] Checkout page (uses existing $createOrder, $processPayment)
-- [ ] Order confirmation page
-
-### Step 6: Supporting Pages
-- [ ] Search, About, FAQ, Contact pages
+CMS section keys for each page are defined in `CMS_SECTION_KEYS` constant
+in `src/components/admin/cms/cms-constants.ts`.
 
 ---
 
@@ -195,21 +106,155 @@ All backend is built - storefront just needs UI:
 
 ---
 
-## Key Design Decisions to Review
-1. **Route prefix**: `/store` vs root `/` for storefront pages
-2. **Font loading strategy**: Google Fonts CDN vs self-hosted
-3. **Image handling**: Product images from DB (storage service) + static assets
-4. **Cart persistence**: Server-side cart (already built) vs local state
-5. **Guest checkout**: Already supported in backend
-6. **Search**: Client-side filtering vs server-side search function
-7. **Mobile-first**: All pages responsive (1-col mobile → 3-col desktop)
+## CMS Server Functions
+- `$getResolvedCmsSection` - fetch published content with locale fallback
+- `$adminUpsertCmsSectionTranslation` - save/update translation
+- `$adminPublishCmsProfile` - create versioned snapshot
+- `$adminBulkCreateCmsSections` - seed multiple sections at once
+- See `AGENTS.md` for full CMS API reference
 
 ---
 
 ## Files Reference
-- Inspiration HTML: `~/projects/ecom-ui-inspiration/*.html`
-- Design assets: `~/projects/e-commerce-ui/public/`
-- Product images: `public/products/*.png`
-- Existing server functions: `src/lib/ecommerce/functions/`
-- Existing queries: `src/lib/ecommerce/queries.ts`
-- Existing actions: `src/hooks/ecommerce-actions.ts`
+- CMS shared utils: `src/lib/cms/utils.ts`
+- CMS admin components: `src/components/admin/cms/`
+- CMS server functions: `src/lib/cms/functions/content.ts`
+- Storefront layout: `src/routes/(storefront)/route.tsx`
+- Storefront components: `src/components/storefront/`
+
+---
+
+## CMS Future Improvements Roadmap
+
+The current CMS is **data-first**: pick a section key, edit raw JSON, publish. The
+long-term vision is a **visual-first** editor where admins interact with the actual
+storefront and edit components in place, while keeping JSON editing as a power-user
+fallback.
+
+### Phase 5: Structured Field Editor (high value, no iframe)
+
+Replace the raw JSON textarea with auto-generated form fields based on section schemas.
+
+**Section Field Schemas** — A registry mapping each section key to its editable fields:
+```ts
+// src/lib/cms/section-schemas.ts
+const SECTION_SCHEMAS: Record<string, FieldSchema[]> = {
+  "home.hero": [
+    { key: "ctaPrimary.label", label: "CTA Button Text", type: "text" },
+    { key: "ctaPrimary.href", label: "CTA Link", type: "text" },
+    { key: "backgroundImage", label: "Hero Image", type: "image" },
+  ],
+  "global.nav": [
+    { key: "logoText", label: "Brand Name", type: "text" },
+    { key: "logoIcon", label: "Logo Icon", type: "select", options: [...] },
+    { key: "logoIconUrl", label: "Custom Logo URL", type: "image" },
+    { key: "logoMode", label: "Logo Display", type: "select", options: ["icon","text","both"] },
+    { key: "items", label: "Nav Links", type: "repeater", fields: [
+      { key: "label", type: "text" }, { key: "href", type: "text" },
+    ]},
+  ],
+};
+```
+
+**Field types**: `text`, `textarea`, `richtext`, `number`, `select`, `color`, `image`,
+`repeater`, `toggle`
+
+**Tasks:**
+- [ ] Create `FieldSchema` type and `SECTION_SCHEMAS` registry in `src/lib/cms/section-schemas.ts`
+- [ ] Build `<CmsFieldRenderer>` component that maps field types to form inputs
+- [ ] Build `<CmsStructuredEditor>` that reads schema, renders fields, syncs to JSON state
+- [ ] Add "Advanced: Edit JSON" toggle at the bottom (current editor becomes the fallback)
+- [ ] Sections without a schema continue using the raw JSON editor automatically
+
+### Phase 6: Page-Grouped Section Browser
+
+Replace the flat alphabetical section list with a page-grouped tree view.
+
+**Page-Section Map:**
+```ts
+const PAGE_SECTION_MAP = {
+  "Home":    ["home.hero", "home.banner", "home.newsletter"],
+  "Shop":    ["shop.catalog", "shop.productDetail", "shop.search", "shop.cart", "shop.checkout"],
+  "About":   ["about.hero", "about.story", "about.values", "about.cta"],
+  "Support": ["contact.page", "support.faq"],
+  "Account": ["account.overview", "account.orders", "account.addresses"],
+  "Global":  ["global.nav", "global.footer", "global.theme"],
+};
+```
+
+**Tasks:**
+- [ ] Add `PAGE_SECTION_MAP` to CMS constants
+- [ ] Create `<CmsPageTree>` component — collapsible page groups with section items
+- [ ] Replace `<CmsSectionBrowser>` in sidebar (or add as alternative view mode)
+- [ ] Show per-page translation completeness badges (e.g., "3/4 translated")
+
+### Phase 7: Iframe Storefront Preview
+
+Add a live preview panel in the admin that shows the actual storefront page.
+
+**Three-panel layout:**
+```
++------------------+------------------------+------------------+
+|  Page Tree       |   Storefront Preview   |  Field Editor    |
+|                  |   (iframe)             |                  |
+|  > Home          |                        |  Title: ______   |
+|    - Hero        |   [clickable regions]  |  Subtitle: ____  |
+|    - Banner      |                        |  CTA: ________   |
+|  > Shop          |   highlighted on hover |                  |
+|  > About         |                        |  [Advanced JSON] |
++------------------+------------------------+------------------+
+```
+
+**postMessage protocol** between editor and iframe:
+- Editor -> iframe: `cms:highlight` (highlight a section), `cms:update` (live field update)
+- iframe -> Editor: `cms:select` (user clicked a component), `cms:ready` (page loaded, lists sections)
+
+**`<CmsEditable>` wrapper** for storefront components:
+- Normal mode: renders children as-is
+- Preview mode (`?cms_preview=true`): adds data attributes, hover outlines, click-to-select
+
+**Tasks:**
+- [ ] Add `cms_preview` query param support to storefront layout
+- [ ] Create `<CmsEditable sectionKey="...">` wrapper component
+- [ ] Build `<CmsPreviewPanel>` with iframe + postMessage bridge
+- [ ] Wire click-to-select: clicking in iframe selects the section in the editor
+- [ ] Highlight active section in the iframe when selected in the sidebar
+
+### Phase 8: Live Preview Updates
+
+Real-time content updates in the iframe as the admin types.
+
+**Tasks:**
+- [ ] Debounced postMessage on field change -> iframe receives updated content
+- [ ] Storefront components read from a `CmsPreviewContext` when in preview mode
+- [ ] Visual diff indicator — show which fields changed vs. published version
+- [ ] "Preview as BG" / "Preview as EN" toggle in the preview panel
+
+### Phase 9: Media & Asset Management
+
+Integrated media library for CMS images, with upload to MinIO/S3.
+
+**Tasks:**
+- [ ] Build `<CmsMediaPicker>` dialog — browse uploaded assets, upload new ones
+- [ ] Wire into `image` field type in the structured editor
+- [ ] Show image thumbnails inline in the editor
+- [ ] Support drag-and-drop upload
+- [ ] Store asset references in `cmsAssetBinding` (schema already exists)
+
+### Phase 10: Advanced Features
+
+- [ ] **Scheduled publishing** — set a future publish date, Inngest job applies it
+- [ ] **Draft preview sharing** — generate a temporary preview URL for stakeholders
+- [ ] **Diff viewer** — side-by-side comparison between versions before rollback
+- [ ] **Role-based editing** — editors can only modify certain sections
+- [ ] **Audit log** — who changed what and when (extend version snapshots)
+- [ ] **A/B testing** — serve different content to different user segments via CMS profiles
+- [ ] **Export/import** — download all CMS content as JSON, import into another environment
+
+### Architecture Notes
+
+- The existing `CMS_SEED_DEFAULTS` map already defines the content structure per section — this is the seed for `SECTION_SCHEMAS`
+- `DynamicLogoIcon` in `src/components/storefront/dynamic-logo-icon.tsx` is the pattern for CMS-driven component rendering
+- Section types (`hero`, `faq`, `feature_grid`, etc.) map naturally to form templates
+- All CMS data flows through `useCmsResolvedSection()` with `pickString()` for graceful fallbacks — new features must preserve this pattern
+- Server functions already support locale fallback chains — the visual editor must respect this

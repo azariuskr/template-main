@@ -24,8 +24,8 @@ export const authQueryOptions = () =>
 		staleTime: 1000 * 60 * 5,
 		gcTime: 1000 * 60 * 10,
 		retry: false,
-		refetchOnWindowFocus: false,
-		// refetchOnWindowFocus: true,
+		refetchOnWindowFocus: true,
+		refetchInterval: 1000 * 60 * 15, // Re-check session every 15 minutes
 	});
 
 export const roleInfoQueryOptions = () =>

@@ -283,6 +283,55 @@ deleteUser     // Delete own account
 
 ---
 
+# CMS Server Functions & Hooks
+
+## Server Functions (`src/lib/cms/functions/content.ts`)
+
+| Function | Description | Method | Permission |
+|----------|-------------|--------|------------|
+| `$getResolvedCmsSection` | Fetch published content with locale fallback | GET | Public |
+| `$adminBootstrapCms` | Initialize CMS with default profile/sections | POST | `products:write` |
+| `$adminPublishCmsProfile` | Create versioned snapshot | POST | `products:publish` |
+| `$adminGetCmsSections` | List all sections with translations | GET | `products:read` |
+| `$getDefaultCmsLocale` | Get/cache default locale | GET | Public |
+| `$adminSetDefaultCmsLocale` | Change default language | POST | `products:write` |
+| `$adminUpsertCmsSectionTranslation` | Save/update translation | POST | `products:write` |
+| `$adminGetCmsVersions` | Version history | GET | `products:read` |
+| `$adminRollbackCmsProfile` | Restore previous version | POST | `products:publish` |
+| `$adminResetCmsTheme` | Reset to PartyPop defaults | POST | `products:write` |
+| `$adminBulkCreateCmsSections` | Seed multiple sections at once | POST | `products:write` |
+
+## CMS Query Hooks (`src/lib/cms/queries.ts`)
+
+| Hook | Query Options | Description |
+|------|---------------|-------------|
+| `useAdminCmsSections` | `adminCmsSectionsQueryOptions(slug)` | Admin section listing |
+| `useAdminCmsVersions` | `adminCmsVersionsQueryOptions(profileId)` | Version history |
+| `useCmsDefaultLocale` | `cmsDefaultLocaleQueryOptions()` | Default locale |
+| `useCmsResolvedSection` | `cmsResolvedSectionQueryOptions(key, locale)` | Resolved content |
+
+## CMS Mutation Hooks (`src/hooks/cms-actions.ts`)
+
+| Hook | Server Function | Invalidates |
+|------|-----------------|-------------|
+| `useUpsertCmsTranslation` | `$adminUpsertCmsSectionTranslation` | `CMS.SECTIONS_BASE` |
+| `usePublishCms` | `$adminPublishCmsProfile` | `CMS.SECTIONS_BASE`, `CMS.VERSIONS_BASE` |
+| `useRollbackCms` | `$adminRollbackCmsProfile` | `CMS.SECTIONS_BASE`, `CMS.VERSIONS_BASE` |
+| `useSetDefaultCmsLocale` | `$adminSetDefaultCmsLocale` | `CMS.DEFAULT_LOCALE` |
+| `useSaveCmsTheme` | `$adminUpsertCmsSectionTranslation` | `CMS.SECTIONS_BASE` |
+| `useResetCmsTheme` | `$adminResetCmsTheme` | `CMS.SECTIONS_BASE` |
+| `useCreateCmsSection` | `$adminUpsertCmsSectionTranslation` | `CMS.SECTIONS_BASE` |
+
+## CMS Shared Utilities (`src/lib/cms/utils.ts`)
+
+| Function | Description |
+|----------|-------------|
+| `pickString(value, fallback)` | Extract string with fallback for CMS content |
+| `normalizeStoreLocale(locale?, fallback)` | Normalize "en"/"bg" locale strings |
+| `formatRelativeTime(date)` | "2m ago", "1h ago" for version timestamps |
+
+---
+
 # Creating New Features Checklist
 
 ### Adding a New Route

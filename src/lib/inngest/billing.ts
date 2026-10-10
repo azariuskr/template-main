@@ -400,7 +400,7 @@ export const billingCreditsPurchased = inngest.createFunction(
 export const stripeWebhookReceived = inngest.createFunction(
   { id: "stripe-webhook-received" },
   { event: "stripe/webhook.received" },
-  async ({ event, step }) => {
+  async ({ event }) => {
     const data = event.data as {
       type: string;
       eventId: string;
@@ -416,7 +416,7 @@ export const stripeWebhookReceived = inngest.createFunction(
 export const polarWebhookReceived = inngest.createFunction(
   { id: "polar-webhook-received" },
   { event: "polar/webhook.received" },
-  async ({ event, step }) => {
+  async ({ event }) => {
     const data = event.data as {
       type: string;
       eventId: string;

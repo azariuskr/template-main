@@ -1,12 +1,7 @@
-import { LandingPage } from '@/components/landing/LandingPage'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
-export const Route = createFileRoute('/')({
-  component: App,
-})
-
-function App() {
-  return (
-    <LandingPage />
-  )
-}
+export const Route = createFileRoute("/")({
+	beforeLoad: () => {
+		throw redirect({ to: "/store", replace: true });
+	},
+});

@@ -82,6 +82,9 @@ const KEYS = {
   product: (slug: string) => `product:${slug}`,
   productById: (id: string) => `product:id:${id}`,
   categoryProducts: (categoryId: string) => `category:${categoryId}:products`,
+  cmsSection: (key: string, locale: string) => `cms:section:${key}:${locale}`,
+  cmsTheme: (locale: string) => `cms:theme:${locale}`,
+  cmsDefaultLocale: () => "cms:default-locale",
 } as const;
 
 // =============================================================================
@@ -93,6 +96,9 @@ const TTL = {
   INVENTORY_LOCK: 10 * 60, // 10 minutes
   PRODUCT: 60 * 60, // 1 hour
   CATEGORY_PRODUCTS: 30 * 60, // 30 minutes
+  CMS_SECTION: 15 * 60, // 15 minutes
+  CMS_THEME: 30 * 60, // 30 minutes
+  CMS_DEFAULT_LOCALE: 60 * 60, // 1 hour
 } as const;
 
 // =============================================================================
@@ -464,6 +470,123 @@ export async function invalidateCategoryCache(categoryId: string): Promise<void>
     await client.del(KEYS.categoryProducts(categoryId));
   } catch (error) {
     console.error("[Redis] Error invalidating category cache:", error);
+  }
+}
+
+// =============================================================================
+// CMS Caching
+// =============================================================================
+
+/**
+ * Get cached CMS section content
+ */
+export async function getCachedCmsSection(
+  sectionKey: string,
+  locale: string,
+): Promise<unknown | null> {
+  try {
+    const client = await getRedisClient();
+    const data = await client.get(KEYS.cmsSection(sectionKey, locale));
+    if (!data) return null;
+    return JSON.parse(data);
+  } catch (error) {
+    console.error("[Redis] Error getting cached CMS section:", error);
+    return null;
+  }
+}
+
+/**
+ * Set CMS section content in cache
+ */
+export async function setCachedCmsSection(
+  sectionKey: string,
+  locale: string,
+  content: unknown,
+): Promise<void> {
+  try {
+    const client = await getRedisClient();
+    const ttl = sectionKey === "global.theme" ? TTL.CMS_THEME : TTL.CMS_SECTION;
+    await client.setEx(
+      KEYS.cmsSection(sectionKey, locale),
+      ttl,
+      JSON.stringify(content),
+    );
+  } catch (error) {
+    console.error("[Redis] Error setting cached CMS section:", error);
+  }
+}
+
+/**
+ * Get cached CMS default locale
+ */
+export async function getCachedCmsDefaultLocale(): Promise<string | null> {
+  try {
+    const client = await getRedisClient();
+    return await client.get(KEYS.cmsDefaultLocale());
+  } catch (error) {
+    console.error("[Redis] Error getting cached CMS default locale:", error);
+    return null;
+  }
+}
+
+/**
+ * Set CMS default locale in cache
+ */
+export async function setCachedCmsDefaultLocale(locale: string): Promise<void> {
+  try {
+    const client = await getRedisClient();
+    await client.setEx(KEYS.cmsDefaultLocale(), TTL.CMS_DEFAULT_LOCALE, locale);
+  } catch (error) {
+    console.error("[Redis] Error setting cached CMS default locale:", error);
+  }
+}
+
+/**
+ * Invalidate specific CMS section cache
+ */
+export async function invalidateCmsSectionCache(
+  sectionKey: string,
+  locale?: string,
+): Promise<void> {
+  try {
+    const client = await getRedisClient();
+    if (locale) {
+      await client.del(KEYS.cmsSection(sectionKey, locale));
+    } else {
+      // Invalidate all locales for this section
+      const pattern = `cms:section:${sectionKey}:*`;
+      const keys = await client.keys(pattern);
+      if (keys.length > 0) {
+        await client.del(keys);
+      }
+    }
+  } catch (error) {
+    console.error("[Redis] Error invalidating CMS section cache:", error);
+  }
+}
+
+/**
+ * Invalidate all CMS cache
+ */
+export async function invalidateAllCmsCache(): Promise<void> {
+  try {
+    const client = await getRedisClient();
+    const patterns = ["cms:section:*", "cms:theme:*", "cms:default-locale"];
+
+    for (const pattern of patterns) {
+      if (pattern.includes("*")) {
+        const keys = await client.keys(pattern);
+        if (keys.length > 0) {
+          await client.del(keys);
+        }
+      } else {
+        await client.del(pattern);
+      }
+    }
+
+    console.log("[Redis] CMS cache flushed");
+  } catch (error) {
+    console.error("[Redis] Error flushing CMS cache:", error);
   }
 }
 

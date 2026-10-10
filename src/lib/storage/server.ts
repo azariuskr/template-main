@@ -17,6 +17,7 @@ import {
 	deleteAvatar as deleteAvatarService,
 	deleteFile as deleteFileService,
 	generateStoragePath,
+	getAdminDownloadUrl as getAdminDownloadUrlService,
 	getDownloadUrl as getDownloadUrlService,
 	getPublicUrl,
 } from "./service";
@@ -397,6 +398,11 @@ const adminListFilesSchema = z.object({
 	search: z.string().optional(),
 });
 
+const adminGetDownloadUrlSchema = z.object({
+	fileId: z.string().min(1, "File ID is required"),
+	expiresIn: z.coerce.number().int().positive().max(24 * 3600).optional(),
+});
+
 /**
  * Admin: List all files across all users, with category filtering
  */
@@ -499,3 +505,18 @@ export const $adminDeleteFile = createServerFn({ method: "POST" })
 			});
 		},
 	);
+
+/**
+ * Admin: Generate presigned download URL for any file
+ */
+export const $adminGetDownloadUrl = createServerFn({ method: "POST" })
+	.inputValidator((data: unknown) => adminGetDownloadUrlSchema.parse(data))
+	.middleware([accessMiddleware({ permissions: { products: ["read"] } })])
+	.handler(async ({ data }) => {
+		return safe(
+			() => getAdminDownloadUrlService(data.fileId, data.expiresIn ?? 3600),
+			{
+				errorMessage: "Failed to generate download URL",
+			},
+		);
+	});

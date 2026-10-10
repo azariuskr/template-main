@@ -66,6 +66,8 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
+      # Force Postgres data dir to match mounted named volume path
+      PGDATA: /var/lib/postgresql/data
       POSTGRES_INITDB_ARGS: "--encoding=UTF8 --lc-collate=C --lc-ctype=C --data-checksums"
     ports:
       - '5432:5432'
@@ -282,6 +284,19 @@ services:
       - traefik.http.routers.bt-minio-console-api.tls=true
       - traefik.http.routers.bt-minio-console-api.priority=300
       - traefik.http.routers.bt-minio-console-api.service=bt-minio-console
+      # Console websocket for object browser live updates (prevents bucket view hanging).
+      - traefik.http.routers.bt-minio-console-ws.rule=Host(`${TRAEFIK_HOST:-localhost}`) && PathPrefix(`/ws/objectManager`)
+      - traefik.http.routers.bt-minio-console-ws.entrypoints=websecure
+      - traefik.http.routers.bt-minio-console-ws.tls=true
+      - traefik.http.routers.bt-minio-console-ws.priority=310
+      - traefik.http.routers.bt-minio-console-ws.service=bt-minio-console
+      # Console static assets are requested at absolute root paths by MinIO UI.
+      # Route only the known asset paths to the MinIO console service.
+      - traefik.http.routers.bt-minio-console-assets.rule=Host(`${TRAEFIK_HOST:-localhost}`) && (PathPrefix(`/static/`) || PathPrefix(`/images/`) || PathPrefix(`/styles/`) || Path(`/Loader.svg`) || Path(`/manifest.json`) || Path(`/safari-pinned-tab.svg`) || Path(`/favicon-16x16.png`) || Path(`/favicon-32x32.png`) || Path(`/favicon-96x96.png`) || Path(`/apple-icon-180x180.png`))
+      - traefik.http.routers.bt-minio-console-assets.entrypoints=websecure
+      - traefik.http.routers.bt-minio-console-assets.tls=true
+      - traefik.http.routers.bt-minio-console-assets.priority=290
+      - traefik.http.routers.bt-minio-console-assets.service=bt-minio-console
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
       interval: 30s
@@ -491,10 +506,14 @@ networks:
 #------------------------------------------------------------------------------
 volumes:
   postgres_data:
+    name: better-tanstart-template_postgres_data
     driver: local
   redis_data:
+    name: better-tanstart-template_redis_data
     driver: local
   minio_data:
+    name: better-tanstart-template_minio_data
     driver: local
   pgadmin_data:
+    name: better-tanstart-template_pgadmin_data
     driver: local

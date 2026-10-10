@@ -7,6 +7,7 @@ import { ROUTES, QUERY_KEYS, AUTH_ROUTE_VIEWS } from "@/constants";
 import { useIsMobile } from "@/hooks/use-mobile";
 import authClient from "@/lib/auth/auth-client";
 import { authQueryOptions } from "@/lib/auth/queries";
+import { $mergeGuestCart } from "@/lib/ecommerce/functions";
 import { uploadAvatar, deleteAvatar } from "@/lib/storage/avatar";
 import { env } from "@/env/client";
 import { stripBasePath } from "@/lib/url/with-base-path";
@@ -19,15 +20,6 @@ type BetterAuthUiLinkProps = Omit<React.ComponentPropsWithoutRef<"a">, "href"> &
   href: string;
   ref?: React.Ref<HTMLAnchorElement>;
 };
-
-function getBasePath(): string {
-  try {
-    const u = new URL(env.VITE_BASE_URL);
-    return u.pathname.replace(/\/$/, "");
-  } catch {
-    return "";
-  }
-}
 
 function toRouterPath(path: string): string {
   // Router already has basepath="/template" configured.
@@ -60,7 +52,7 @@ export function BetterAuthUiProviders({ children }: { children: React.ReactNode 
           router.navigate({ to: toRouterPath(href) as To, replace: true });
         }}
         Link={BetterAuthUiLink}
-        redirectTo={toRouterPath(ROUTES.DASHBOARD)}
+        redirectTo={toRouterPath(ROUTES.STORE.BASE)}
         onSessionChange={async () => {
           await Promise.all([
             queryClient.invalidateQueries({ queryKey: QUERY_KEYS.AUTH.USER }),
@@ -68,6 +60,14 @@ export function BetterAuthUiProviders({ children }: { children: React.ReactNode 
             queryClient.removeQueries({ queryKey: authQueryOptions().queryKey }),
             queryClient.invalidateQueries({ queryKey: authQueryOptions().queryKey }),
           ]);
+          // Merge guest cart on login (best-effort, non-blocking)
+          $mergeGuestCart()
+            .then((result) => {
+              if (result.ok && result.data.merged) {
+                queryClient.invalidateQueries({ queryKey: QUERY_KEYS.CART.CURRENT });
+              }
+            })
+            .catch(() => { });
           await router.invalidate();
         }}
         avatar={{

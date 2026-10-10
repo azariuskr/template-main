@@ -18,7 +18,7 @@ export interface UseActionOptions<TData, TVariables> {
 	retry?: boolean;
 }
 
-type ActionFn<TVariables, TData> = (
+export type ActionFn<TVariables, TData> = (
 	vars: TVariables,
 ) => Promise<Result<TData, ValidationError | HttpError>>;
 
@@ -112,7 +112,7 @@ export function useFormAction<TData = void, TVariables = void>(
  * This allows using server functions directly with useAction.
  */
 export function fromServerFn<TInput, TReturn>(
-	serverFn: (opts: { data: TInput }) => Promise<Result<TReturn, HttpError | ValidationError>>,
+	serverFn: (opts: { data: TInput }) => Promise<Result<TReturn, HttpError>>,
 	options?: {
 		successMessage?: string;
 		errorMessage?: string;

@@ -1,4 +1,3 @@
-import { TanStackDevtools } from "@tanstack/react-devtools";
 import type { QueryClient } from "@tanstack/react-query";
 import {
 	createRootRouteWithContext,
@@ -7,15 +6,14 @@ import {
 	ScriptOnce,
 	Scripts,
 } from "@tanstack/react-router";
-import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { CookieConsentBanner } from "@/components/consent-banner";
 import { Toaster } from "@/components/ui/sonner";
 import { BetterAuthUiProviders } from "@/lib/auth/better-auth-ui-provider";
 import { type AuthQueryResult, authQueryOptions } from "@/lib/auth/queries";
 import { ImageLoadQueueProvider } from "@/lib/performance/image-load-queue";
 import { GlobalSEO, OrganizationStructuredData } from "@/lib/seo";
 import { appActions, appStore } from "@/lib/store/app";
-import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 import appCss from "../styles/index.css?url";
 
 interface MyRouterContext {
@@ -74,11 +72,7 @@ function RootComponent() {
 }
 
 function RootDocument({ children }: { readonly children: React.ReactNode }) {
-	const [isClient, setIsClient] = useState(false);
-
 	useEffect(() => {
-		setIsClient(true);
-
 		const media = window.matchMedia("(prefers-color-scheme: dark)");
 		const handler = () => appActions.setTheme(appStore.state.theme);
 		media.addEventListener("change", handler);
@@ -102,6 +96,7 @@ function RootDocument({ children }: { readonly children: React.ReactNode }) {
 					<ImageLoadQueueProvider>{children}</ImageLoadQueueProvider>
 				</BetterAuthUiProviders>
 				<Toaster richColors />
+				<CookieConsentBanner />
 				{/* {isClient && import.meta.env.DEV ? (
 					<TanStackDevtools
 						config={{

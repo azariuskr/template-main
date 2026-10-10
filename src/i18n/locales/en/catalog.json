@@ -1,0 +1,23 @@
+{
+  "productCount_one": "{{count}} product found",
+  "productCount_other": "{{count}} products found",
+  "min": "Min",
+  "max": "Max",
+  "searchProducts": "Search products...",
+  "filters": "Filters",
+  "clearAll": "Clear all",
+  "category": "Category",
+  "brand": "Brand",
+  "colors": "Colors",
+  "sizes": "Sizes",
+  "showResults": "Show",
+  "emptyHint": "Try adjusting your search or filters",
+  "clearAllFilters": "Clear All Filters",
+  "previous": "Previous",
+  "next": "Next",
+  "sortNewest": "Newest",
+  "sortPriceLow": "Price: Low to High",
+  "sortPriceHigh": "Price: High to Low",
+  "sortNameAZ": "Name: A-Z",
+  "sortFeatured": "Featured"
+}

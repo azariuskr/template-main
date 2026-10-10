@@ -1,5 +1,5 @@
 {
-  "name": "template-main",
+  "name": "test",
   "private": true,
   "type": "module",
   "scripts": {
@@ -15,7 +15,8 @@
     "auth:generate": "pnpm dlx @better-auth/cli@latest generate --config ./src/lib/auth/auth.ts --y --output ./src/lib/db/schema/auth.schema.ts && prettier --write ./src/lib/db/schema/auth.schema.ts",
     "db": "drizzle-kit",
     "db:migrate": "drizzle-kit migrate",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "db:populate:ecommerce": "tsx scripts/populate-ecommerce-data.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.0.0",
@@ -69,13 +70,14 @@
     "tailwind-merge": "^3.0.2",
     "tailwindcss": "^4.0.6",
     "tw-animate-css": "^1.3.6",
+    "use-debounce": "^10.1.0",
     "vite-tsconfig-paths": "^6.0.2",
+    "xlsx": "^0.18.5",
     "zod": "^4.1.11"
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.4",
     "@faker-js/faker": "^10.0.0",
-    "@playwright/test": "^1.58.2",
     "@tanstack/devtools-event-client": "^0.4.0",
     "@tanstack/devtools-vite": "^0.3.11",
     "@testing-library/dom": "^10.4.0",

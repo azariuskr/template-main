@@ -417,3 +417,30 @@ export async function getDownloadUrl(
 		expiresAt: new Date(Date.now() + expiresIn * 1000),
 	};
 }
+
+/**
+ * Admin: Get a presigned download URL for any file
+ */
+export async function getAdminDownloadUrl(
+	fileId: string,
+	expiresIn = 3600,
+): Promise<{ url: string; expiresAt: Date }> {
+	const storage = getStorage();
+
+	const [storedFile] = await db
+		.select()
+		.from(file)
+		.where(eq(file.id, fileId))
+		.limit(1);
+
+	if (!storedFile) {
+		throw new Error("File not found");
+	}
+
+	const url = await storage.getPresignedUrl(storedFile.storagePath, expiresIn);
+
+	return {
+		url,
+		expiresAt: new Date(Date.now() + expiresIn * 1000),
+	};
+}

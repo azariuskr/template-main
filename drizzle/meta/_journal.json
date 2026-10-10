@@ -43,6 +43,13 @@
       "when": 1771329158186,
       "tag": "0005_wooden_klaw",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1771398864764,
+      "tag": "0006_real_sister_grimm",
+      "breakpoints": true
     }
   ]
 }

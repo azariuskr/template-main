@@ -1,8 +1,4 @@
-import {
-    AccountSettingsCards,
-    SecuritySettingsCards,
-    UpdateAvatarCard,
-} from "@daveyplate/better-auth-ui";
+import { AccountSettingsCards, SecuritySettingsCards } from "@daveyplate/better-auth-ui";
 import TrustedDeviceCard from "@/components/admin/account/TrustedDeviceCard";
 import {
     Card,
@@ -11,7 +7,6 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-import { AvatarSettingsCard } from "./AvatarSettingsCard";
 
 type ComingSoonProps = { title: string; description: string };
 

@@ -1,0 +1,21 @@
+{
+  "verifyingTitle": "Verifying your payment...",
+  "verifyingDesc": "Please wait while we confirm your order.",
+  "successTitle": "Order Confirmed!",
+  "successDesc": "Thank you for your purchase. Your order has been placed successfully.",
+  "orderNumber": "Order Number",
+  "whatsNext": "What's next?",
+  "whatsNextDesc": "You'll receive a confirmation email shortly. We'll notify you when your order ships with tracking information.",
+  "viewOrder": "View Order",
+  "pendingTitle": "Payment Processing",
+  "pendingDesc": "Your payment is still being processed. This may take a few moments.",
+  "viewMyOrders": "View My Orders",
+  "errorTitle": "Something went wrong",
+  "errorDesc": "We couldn't verify your payment. Please check your order status or contact support.",
+  "checkOrders": "Check Orders",
+  "contactSupport": "Contact Support",
+  "cancelledTitle": "Checkout Cancelled",
+  "cancelledDesc": "Your payment was not completed. No charges have been made. Your cart items are still saved.",
+  "returnToCart": "Return to Cart",
+  "continueShopping": "Continue Shopping"
+}

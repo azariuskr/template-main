@@ -8,31 +8,34 @@ export interface HttpError {
     details?: Record<string, any>;
 }
 
-export const Ok = <T>(data: T, message?: string): Result<T, never> => ({
+export type OkResult<T> = { ok: true; data: T; message?: string };
+export type ErrResult<E> = { ok: false; error: E; message?: string };
+
+export const Ok = <T>(data: T, message?: string): OkResult<T> => ({
     ok: true,
     data,
     message,
 });
 
-export const Err = <E>(error: E, message?: string): Result<never, E> => ({
+export const Err = <E>(error: E, message?: string): ErrResult<E> => ({
     ok: false,
     error,
     message,
 });
 
-export const notFound = (message = "Resource not found"): Result<never, HttpError> =>
+export const notFound = (message = "Resource not found"): ErrResult<HttpError> =>
     Err({ status: 404, message });
 
-export const forbidden = (message = "Access forbidden"): Result<never, HttpError> =>
+export const forbidden = (message = "Access forbidden"): ErrResult<HttpError> =>
     Err({ status: 403, message }, message);
 
-export const unauthorized = (message = "Unauthorized access"): Result<never, HttpError> =>
+export const unauthorized = (message = "Unauthorized access"): ErrResult<HttpError> =>
     Err({ status: 401, message }, message);
 
-export const badRequest = (message = "Bad request"): Result<never, HttpError> =>
+export const badRequest = (message = "Bad request"): ErrResult<HttpError> =>
     Err({ status: 400, message }, message);
 
-export const serverError = (message = "Internal server error", details?: Record<string, any>): Result<never, HttpError> =>
+export const serverError = (message = "Internal server error", details?: Record<string, any>): ErrResult<HttpError> =>
     Err({ status: 500, message, details });
 
 export async function safe<T>(

@@ -282,5 +282,3 @@ docker/data/
 test-artifacts/
 test-results/
 .worktrees/
-storefront-screenshots/
-backups/

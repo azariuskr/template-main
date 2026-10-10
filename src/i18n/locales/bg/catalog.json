@@ -1,0 +1,23 @@
+{
+  "productCount_one": "{{count}} намерен продукт",
+  "productCount_other": "{{count}} намерени продукта",
+  "min": "Мин",
+  "max": "Макс",
+  "searchProducts": "Търси продукти...",
+  "filters": "Филтри",
+  "clearAll": "Изчисти всички",
+  "category": "Категория",
+  "brand": "Марка",
+  "colors": "Цветове",
+  "sizes": "Размери",
+  "showResults": "Покажи",
+  "emptyHint": "Опитай да промениш търсенето или филтрите",
+  "clearAllFilters": "Изчисти всички филтри",
+  "previous": "Предишна",
+  "next": "Следваща",
+  "sortNewest": "Най-нови",
+  "sortPriceLow": "Цена: Ниска към висока",
+  "sortPriceHigh": "Цена: Висока към ниска",
+  "sortNameAZ": "Име: А-Я",
+  "sortFeatured": "Препоръчани"
+}

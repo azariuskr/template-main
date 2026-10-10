@@ -101,3 +101,120 @@
 ### Next focus
 - Task #5: Design storefront UI (e-commerce-ui inspiration)
 - Task #6: Build customer-facing store pages
+
+## 2026-02-17
+
+### CMS kickoff (feat/cms-core)
+- Continuing work without baseline tests (Vitest missing test files / shutdown hang context acknowledged).
+- Ensured required test output directories exist in worktree:
+  - `test-results/`
+  - `test-artifacts/`
+- Found local-kanban reference and verified board source:
+  - local-kanban repo: `/home/krisadmin/projects/local-kanban`
+  - board URL: `https://kris-hp-400.taile0e81a.ts.net/kanban/`
+- Initialized file-based planning artifacts in worktree:
+  - `task_plan.md`
+  - `findings.md`
+  - `progress.md`
+
+### Progress update
+- Added kanban backlog card: `[CMS] Phase 1 schema foundation (profiles/locales/sections/translations/versions)`.
+- Implemented CMS schema draft:
+  - `src/lib/db/schema/cms.schema.ts`
+  - Export wired in `src/lib/db/schema/index.ts`
+- Generated migration:
+  - `drizzle/0006_real_sister_grimm.sql`
+  - `drizzle/meta/0006_snapshot.json`
+- Implemented CMS service foundation:
+  - `src/lib/cms/functions/content.ts`
+  - `src/lib/cms/functions/index.ts`
+  - `src/lib/cms/index.ts`
+- Added server functions:
+  - `$getResolvedCmsSection` (fallback `bg-BG -> bg -> en`)
+  - `$adminBootstrapCms` (default profile/locales/hero)
+  - `$adminPublishCmsProfile` (snapshot publish)
+  - `$adminGetCmsVersions`
+- Browser control became unavailable while adding additional kanban cards (will retry).
+
+### Next focus
+- Apply migration in live dev DB and verify objects.
+- Add rollback endpoint using version snapshots.
+- Start storefront hero/banner consuming CMS resolver output.
+
+## 2026-02-21 19:40 (cron momentum reminder)
+- Done: Verified health of core CMS and Storefront files via scoped Biome checks.
+- Done: Applied final formatting and type hardening fixes to `src/lib/cms/functions/content.ts` and `src/components/storefront/product-card.tsx` (removed `any` casts, fixed a11y, stable keys).
+- Verified: All core CMS and critical storefront components now pass clean Biome checks in the `feat-cms-core` worktree.
+- Next: Final visual verification of Hero/Banner integration once browser tool is available.
+
+## 2026-02-24 10:20 (cron: ecommerce data population)
+- Added idempotent population script: `scripts/populate-ecommerce-data.ts`
+  - Upserts coherent demo ecommerce data for:
+    - brands, categories, colors, sizes
+    - products (forced `status='active'`, `published_at` set when missing)
+    - product variants (color/size/SKU stock snapshots)
+    - users + auth accounts (demo credential provider rows)
+    - orders + payments (order items replaced per order for idempotence)
+  - Recomputes each product `total_stock` from variants.
+  - Writes run summary to `logs/ecommerce-population.latest.json` with created/updated counts and blockers.
+- Added npm script: `db:populate:ecommerce` in `package.json`.
+- Blocker encountered when executing locally:
+  - `write CONNECTION_CLOSED localhost:6432`
+  - No rows were created/updated in this run due to unavailable DB connection.
+
+## 2026-02-25
+
+### Nightly ecommerce data population (feat-cms-core)
+- Expanded `scripts/populate-ecommerce-data.ts` demo catalog with additional realistic entities while preserving idempotent upsert behavior.
+- Added new reusable dimensions:
+  - Colors: Stone, Moss, Glacier
+  - Sizes: XS, XXL
+- Added demo customer accounts/users:
+  - `demo-user-niko`, `demo-user-elena`, `demo-user-dani`
+- Added new active/published products with variant matrices:
+  - Merino Transit Base Layer
+  - Summit Quilted Vest
+  - Transit Weekender Duffel
+- Added coherent cross-product order history:
+  - `DEMO-10006`..`DEMO-10010` with mixed statuses (pending/confirmed/processing/shipped/delivered)
+- Executed population script successfully:
+  - Command: `pnpm -s tsx scripts/populate-ecommerce-data.ts`
+  - Latest run log: `logs/ecommerce-population.latest.json`
+  - Blockers: none
+
+### Nightly ecommerce data population (continuation)
+- Continued extending `scripts/populate-ecommerce-data.ts` with more realistic demo coverage while keeping upsert/idempotent semantics.
+- Added demo customer accounts/users:
+  - `demo-user-petar`, `demo-user-yana`
+- Added active/published products with color/size variant matrices:
+  - Nomad Grid Hoodie
+  - Harbor Chino Short
+  - Drift Knit Polo
+  - Metro Sling Pack
+- Added coherent order history expansion:
+  - `DEMO-10011`..`DEMO-10014` across new/existing customers and products with mixed lifecycle states
+- Re-ran population script successfully:
+  - Command: `pnpm -s tsx scripts/populate-ecommerce-data.ts`
+  - Result: created new rows + updated existing rows (idempotent refresh)
+  - Latest run log: `logs/ecommerce-population.latest.json`
+  - Blockers: none
+
+## 2026-02-26
+
+### Nightly ecommerce data population (worktree feat/cms-core)
+- Extended `scripts/populate-ecommerce-data.ts` again with additional coherent demo entities while preserving idempotent upsert behavior.
+- Added demo customer accounts/users:
+  - `demo-user-teo`, `demo-user-lora`, `demo-user-boris`
+- Added active/published products and variant matrices:
+  - Alpine Softshell Pant
+  - Coastline Linen Shirt
+  - Voyager Tech Parka
+  - Ridge Trail Sock 3-Pack
+- Expanded order history with mixed status coverage:
+  - `DEMO-10015`..`DEMO-10020`
+- Executed population script successfully:
+  - Command: `pnpm -s tsx scripts/populate-ecommerce-data.ts`
+  - Created: 3 users, 3 accounts, 4 products, 16 variants, 6 orders (+ items/payments)
+  - Updated: existing dimensions/products/orders/CMS records via idempotent refresh
+  - Latest run log: `logs/ecommerce-population.latest.json`
+  - Blockers: none

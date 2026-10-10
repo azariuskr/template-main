@@ -1,22 +1,27 @@
 import { Link } from '@tanstack/react-router'
 import { createFileRoute } from '@tanstack/react-router'
 import { ArrowLeft, Shield } from 'lucide-react'
+import { StorefrontNav } from '@/components/storefront/storefront-nav'
+import { StorefrontFooter } from '@/components/storefront/storefront-footer'
 
 export const Route = createFileRoute('/cookies')({
     component: RouteComponent,
 })
 
 function RouteComponent() {
+    const { locale: routeLocale } = Route.useRouteContext() as { locale?: string }
+    const locale = routeLocale === 'en' ? 'en' : 'bg'
+    const isBg = locale === 'bg'
     return (
-        <main className="min-h-screen bg-background py-10 px-4 md:px-8 transition-colors duration-300">
+        <div className="storefront flex min-h-screen flex-col">
+            <StorefrontNav locale={locale} />
+            <main className="flex-1 py-10 px-4 md:px-8">
             <div className="container max-w-4xl mx-auto space-y-8">
                 {/* Header Section */}
                 <div className="flex items-center gap-4 mb-8">
-                    <Link to="/">
-                        <button className="group flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
-                            <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
-                            Back to Home
-                        </button>
+                    <Link to="/store" search={{ locale }} className="group flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+                        <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
+                        {isBg ? 'Назад към магазина' : 'Back to Store'}
                     </Link>
                 </div>
 
@@ -27,7 +32,7 @@ function RouteComponent() {
                         </div>
                         <div>
                             <h1 className="text-4xl font-extrabold tracking-tight text-foreground">
-                                Cookie Policy
+                                {isBg ? 'Политика за бисквитките' : 'Cookie Policy'}
                             </h1>
                         </div>
                     </div>
@@ -48,6 +53,8 @@ function RouteComponent() {
                     </div>
                 </div>
             </div>
-        </main>
+            </main>
+            <StorefrontFooter locale={locale} />
+        </div>
     )
 }
